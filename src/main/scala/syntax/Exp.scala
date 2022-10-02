@@ -1,3 +1,7 @@
+package syntax
+
+import cats.data.NonEmptyList
+
 type Symbol = String
 enum Var[A] {
   case Simple(x: Symbol, ann: A)
@@ -14,6 +18,8 @@ final case class FunDec[A](
     body: Exp[A],
     ann: A
 )
+final case class TyDec[A](name: Symbol, ty: Ty[A], ann: A)
+final case class VarDec[A](name: Symbol, typ: Option[(Symbol, A)], init: Exp[A], ann: A)
 
 enum Exp[A] {
   case VarE(v: Var[A])
@@ -33,10 +39,11 @@ enum Exp[A] {
   case ArrayE(typ: Symbol, size: Exp[A], init: Exp[A], ann: A)
 }
 
+
 enum Dec[A] {
-  case Function(fs: List[FunDec[A]])
-  case VarDec(name: Symbol, typ: Option[(Symbol, A)], init: Exp[A], ann: A)
-  case TypeDec(tys: List[(Symbol, Ty[A], A)])
+  case Fun(fs: List[FunDec[A]])
+  case Var(vd: VarDec[A])
+  case Type(tys: List[TyDec[A]])
 }
 
 enum Ty[A] {
